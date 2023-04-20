@@ -1,0 +1,28 @@
+.loader {
+  overflow: visible;
+  height: fit-content;
+  width: fit-content;
+  padding: 20px;
+  display: flex;
+  margin: 0 auto;
+  .logo {
+    fill: none;
+    stroke-dasharray: 20px;
+    /*<-- Play with this number until it look cool */
+    // stroke: #9ea7d9;
+    stroke: #42a4f592;
+    // stroke: linear-gradient(red, yellow);
+    animation: load 15s infinite linear;
+  }
+
+  @keyframes load {
+    0% {
+      stroke-dashoffset: 0px;
+    }
+
+    100% {
+      stroke-dashoffset: 200px;
+      /* <-- This number should always be 10 times the number up there*/
+    }
+  }
+}
