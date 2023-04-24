@@ -1,0 +1,6 @@
+.transactions-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  align-content: stretch;
+  gap: 1em;
+}

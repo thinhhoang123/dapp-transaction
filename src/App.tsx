@@ -1,12 +1,18 @@
 import { useState } from 'react';
 import { Container } from '@mui/material';
 import HeroSection from './components/HeroSections';
+import Transactions from './components/Transactions';
 
 function App() {
   return (
-    <Container maxWidth="lg">
-      <HeroSection />
-    </Container>
+    <>
+      <main className="main-project">
+        <Container maxWidth="lg" className="back">
+          <HeroSection />
+          <Transactions />
+        </Container>
+      </main>
+    </>
   );
 }
 

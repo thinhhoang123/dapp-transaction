@@ -1,7 +1,7 @@
 import React, { createContext, useEffect, useState } from 'react';
 
 import { contractABI, contractAddress } from '../utils/constants';
-import { ethers, parseEther, toBeHex } from 'ethers';
+import { ethers, formatUnits, parseEther, toBeHex, toNumber } from 'ethers';
 export const TransactionContext = createContext<any>(null);
 
 const { ethereum } = window;
@@ -40,20 +40,18 @@ export const TransactionsProvider: React.FC<ITransactionsProviderProps> = ({
         const availableTransactions =
           await transactionsContract.getAllTransactions();
         const structuredTransactions = availableTransactions.map(
-          (transaction: any) => ({
-            addressTo: transaction.receiver,
-            addressFrom: transaction.sender,
-            timestamp: new Date(
-              transaction.timestamp.toNumber() * 1000
-            ).toLocaleString(),
-            message: transaction.message,
-            keyword: transaction.keyword,
-            amount: parseInt(transaction.amount._hex) / 10 ** 18,
-          })
+          (transaction: any) => {
+            return {
+              addressTo: transaction.receiver,
+              addressFrom: transaction.sender,
+              timestamp: new Date(
+                toNumber(transaction.timestamp) * 1000
+              ).toLocaleString(),
+              message: transaction.message,
+              amount: formatUnits(transaction.amount, 18),
+            };
+          }
         );
-
-        console.log(availableTransactions);
-
         setTransactions(structuredTransactions);
       } else {
         console.log('Ethereum is not present');
@@ -126,8 +124,7 @@ export const TransactionsProvider: React.FC<ITransactionsProviderProps> = ({
     try {
       if (ethereum) {
         const transactionsContract = await createEthereumContract();
-        const parsedAmount = parseEther(amount);
-        const parsedAmountHex = toBeHex(parsedAmount);
+        const parsedAmountHex = toBeHex(parseEther(amount));
 
         await ethereum.request({
           method: 'eth_sendTransaction',
@@ -143,7 +140,7 @@ export const TransactionsProvider: React.FC<ITransactionsProviderProps> = ({
 
         const transactionHash = await transactionsContract.addToBlockchain(
           addressTo,
-          parsedAmount,
+          parsedAmountHex,
           message
         );
 

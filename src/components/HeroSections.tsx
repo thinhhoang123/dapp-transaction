@@ -8,31 +8,18 @@ import { TransactionContext } from '../context/TransactionContext';
 export interface IHeroSectionProps {}
 
 export default function HeroSection(props: IHeroSectionProps) {
-  const {
-    currentAccount,
-    connectWallet,
-    handleChange,
-    sendTransaction,
-    formData,
-    isLoading,
-  } = React.useContext(TransactionContext);
-
+  const { currentAccount, connectWallet, sendTransaction } =
+    React.useContext(TransactionContext);
   const handleSubmit = async (data: any) => {
     console.log(data);
     await sendTransaction(data.address, data.amount, data.message);
   };
-  console.log(currentAccount);
+
   return (
-    <section>
-      <Grid
-        container
-        spacing={2}
-        sx={{ marginTop: '10em' }}
-        alignItems="center"
-        justifyContent="center"
-      >
-        <Grid item xs={6}>
-          <h1>What is Ethereum?</h1>
+    <section className="hero-section">
+      <Grid container spacing={2} alignItems="center" justifyContent="center">
+        <Grid item xs={12} lg={6}>
+          <h1>What is Ethereum🧐</h1>
           <p>
             <i className="fad fa-quote-left"></i> Ethereum is a technology
             that's home to digital money, global payments, and applications. The
@@ -54,7 +41,8 @@ export default function HeroSection(props: IHeroSectionProps) {
         </Grid>
         <Grid
           item
-          xs={6}
+          xs={12}
+          lg={6}
           sx={{
             display: 'flex',
             flexDirection: 'column',

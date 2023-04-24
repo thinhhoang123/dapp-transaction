@@ -1,0 +1,84 @@
+.card {
+  // width: 250px;
+  height: 150px;
+  position: relative;
+  padding: 25px;
+
+  background: hsla(0, 0%, 8%, 0.5);
+  backdrop-filter: blur(0.5em);
+  border-radius: 12px;
+  transition: all 0.8s cubic-bezier(0.15, 0.83, 0.66, 1);
+  cursor: pointer;
+}
+
+.card:hover {
+  transform: scale(1.05);
+}
+
+.container {
+  width: 250px;
+  height: 250px;
+  position: absolute;
+  right: -35px;
+  top: -50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: scale(0.7);
+}
+
+.img {
+  width: 120px;
+  height: 120px;
+  display: inline;
+  animation: breath 2s infinite;
+}
+
+@keyframes breath {
+  0% {
+    opacity: 0.2;
+  }
+
+  100% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes clouds {
+  0% {
+    transform: translateX(15px);
+  }
+
+  50% {
+    transform: translateX(0px);
+  }
+
+  100% {
+    transform: translateX(15px);
+  }
+}
+.card-header {
+  p {
+    font-size: 1em;
+    line-height: 135%;
+    font-weight: 500;
+  }
+}
+
+.date-transaction {
+  width: 80px;
+  height: 36px;
+  position: absolute;
+  right: 25px;
+  bottom: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 9px;
+  span {
+    font-weight: 700;
+    font-size: 13px;
+    line-height: 134.49%;
+  }
+}
