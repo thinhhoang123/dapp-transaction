@@ -6,15 +6,18 @@ export const TransactionContext = createContext<any>(null);
 
 const { ethereum } = window;
 
-const createEthereumContract = async () => {
+const getSigner = async () => {
   const provider = new ethers.BrowserProvider(ethereum);
-  const signer = await provider.getSigner();
+  return await provider.getSigner();
+};
+
+const createEthereumContract = async () => {
+  const signer = await getSigner();
   const transactionsContract = new ethers.Contract(
     contractAddress,
     contractABI,
     signer
   );
-
   return transactionsContract;
 };
 
@@ -25,7 +28,7 @@ export interface ITransactionsProviderProps {
 export const TransactionsProvider: React.FC<ITransactionsProviderProps> = ({
   children,
 }) => {
-  const [currentAccount, setCurrentAccount] = useState('');
+  const [currentAccount, setCurrentAccount] = useState<any>();
   const [isLoading, setIsLoading] = useState(false);
   const [transactionCount, setTransactionCount] = useState(
     localStorage.getItem('transactionCount')
@@ -64,7 +67,6 @@ export const TransactionsProvider: React.FC<ITransactionsProviderProps> = ({
   const checkIfWalletIsConnect = async () => {
     try {
       if (!ethereum) return alert('Please install MetaMask.');
-
       const accounts = await ethereum.request({ method: 'eth_accounts' });
 
       if (accounts.length) {
@@ -101,20 +103,20 @@ export const TransactionsProvider: React.FC<ITransactionsProviderProps> = ({
   const connectWallet = async () => {
     try {
       if (!ethereum) return alert('Please install MetaMask.');
-
-      const accounts = await ethereum.request({
-        method: 'eth_requestAccounts',
-      });
-
-      setCurrentAccount(accounts[0]);
+      const signer = await getSigner();
+      const address = signer.getAddress();
+      setCurrentAccount(address);
       window.location.reload();
-
-      console.log(accounts[0]);
     } catch (error) {
       console.log(error);
       throw new Error('No ethereum object');
     }
   };
+
+  window.ethereum.on('accountsChanged', function (accounts: any) {
+    console.log('accountsChanges', accounts);
+    window.location.reload();
+  });
 
   const sendTransaction = async (
     addressTo: string,
@@ -125,17 +127,12 @@ export const TransactionsProvider: React.FC<ITransactionsProviderProps> = ({
       if (ethereum) {
         const transactionsContract = await createEthereumContract();
         const parsedAmountHex = toBeHex(parseEther(amount));
+        const signer = await getSigner();
 
-        await ethereum.request({
-          method: 'eth_sendTransaction',
-          params: [
-            {
-              from: currentAccount,
-              to: addressTo,
-              gas: '0x5208',
-              value: parsedAmountHex,
-            },
-          ],
+        const tx = await signer.sendTransaction({
+          from: currentAccount,
+          to: addressTo,
+          value: parsedAmountHex,
         });
 
         const transactionHash = await transactionsContract.addToBlockchain(
@@ -146,6 +143,7 @@ export const TransactionsProvider: React.FC<ITransactionsProviderProps> = ({
 
         setIsLoading(true);
         console.log(`Loading - ${transactionHash.hash}`);
+        await tx.wait();
         await transactionHash.wait();
         console.log(`Success - ${transactionHash.hash}`);
         setIsLoading(false);
