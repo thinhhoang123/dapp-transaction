@@ -64,8 +64,10 @@ export default function TransactionsCard(props: any) {
       </div>
 
       <div className="card-header">
-        <p>From: {shortenAddress(props.addressFrom)}</p>
-        <p>To: {shortenAddress(props.addressTo)}</p>
+        <p>
+          From: {props.addressFrom ? shortenAddress(props.addressFrom) : null}
+        </p>
+        <p>To: {props.addressTo ? shortenAddress(props.addressTo) : null}</p>
         <p>
           Amount: {props.amount} <i className="fab fa-ethereum"></i>
         </p>

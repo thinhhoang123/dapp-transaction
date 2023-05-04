@@ -62,7 +62,7 @@ export default function CardETH(props: ICardETHProps) {
       </svg>
       {currentAccount ? (
         <p className={styles['current-account']}>
-          {shortenAddress(currentAccount)}
+          {currentAccount ? shortenAddress(currentAccount) : null}
         </p>
       ) : null}
       <div className={styles['textBox']}>

@@ -8,11 +8,15 @@ import { TransactionContext } from '../context/TransactionContext';
 export interface IHeroSectionProps {}
 
 export default function HeroSection(props: IHeroSectionProps) {
-  const { currentAccount, connectWallet, sendTransaction } =
+  const { currentAccount, connectWallet, sendTransaction, submitFundReceived } =
     React.useContext(TransactionContext);
+
   const handleSubmit = async (data: any) => {
-    console.log(data);
-    await sendTransaction(data.address, data.amount, data.message);
+    await sendTransaction(data.amount, data.message);
+  };
+
+  const handleSubmitFund = async (data: any) => {
+    await submitFundReceived(data.fundReceived, data.goal);
   };
 
   return (
@@ -50,7 +54,7 @@ export default function HeroSection(props: IHeroSectionProps) {
           }}
         >
           <ETHLoader />
-          <FormSendETH submit={handleSubmit} />
+          <FormSendETH submit={handleSubmit} submitFund={handleSubmitFund} />
         </Grid>
       </Grid>
     </section>
